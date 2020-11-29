@@ -1,0 +1,92 @@
+
+\textbf{Exercise 1. }\emph{A Poisson process with rate \( \lambda \) can be defined as a counting process \( \{N(t);\, t \geq 0\} \) with the following properties:}
+\begin{enumerate}
+  \item \emph{\( N(0) = 0 \) }
+  \item \( N(t) \) \emph{has independent and stationary increments}.
+  \item \emph{Let \( \Delta N(t)  = N(t + \Delta t) - N(t)\). The following relations hold: }
+        \[
+        \begin{aligned}
+          P[\Delta N(t) = 0] &= 1 - \lambda \Delta t + o(\Delta t),\\
+          P[\Delta N(t) = 1] &= \lambda \Delta t + o(\Delta t),\\
+          P[\Delta N(t) \geq 2] &= o(\Delta t).\\
+        \end{aligned}
+        \]
+\end{enumerate}
+\emph{From this definition show that}
+\begin{equation}\label{eq:1}
+  P[N(t) = n] = \frac{1}{n!}\lambda^{n}t^{n} e^{-\lambda t}.
+\end{equation}
+
+\emph{To this end, set up a system of differential equations for the quantities \( P[N(t) = 0] \) and \( P[N(t) = n] \) with \( n \geq 1 \). Then verify that Equation~\ref{eq:1} satisfies the differential equations derived.}
+
+\emph{Illustrate the validity of the derivation by comparing the empirical distribution obtained in a simulation of the Poisson process and the theoretical distribution of \( P[N(t) = n ]\) given by Equation~\ref{eq:1} for the values \( \lambda = 10 \) and \( t = 2 \).}
+
+\emph{Solution. }For instance, the differential equation for \( P[N(t) = 0]\) can be derived from the fact that
+\[
+  \begin{aligned}
+    P[N(t + \Delta t) = 0] &= P[N(t) = 0]P[\Delta N(t) = 0]\\
+    &= P[N(t) = 0](1- \lambda\Delta t + o(\Delta t))\\
+    &= P[N(t) = 0] - P[N(t) = 0]\lambda\Delta t + o(\Delta t).
+    \end{aligned}
+  \]
+  Passing \( P[N(t) = 0] \) to the left and dividing in both sides by \( \Delta t \),
+  \[
+    \frac{P[N(t + \Delta t) = 0] - P[N(t) = 0]}{\Delta t} = - \lambda P[N(t) = 0].
+  \]
+  Where the following property of \( o(\cdot) \) is used:
+  \[
+    \lim_{\Delta t \to 0^{+}}\frac{o(\Delta t)}{\Delta t} = 0
+  \]
+The corresponding differential equation is obtained in the limit \( \Delta t \to 0^{+} \)
+\[
+  \frac{d}{dt}P[N(t) = 0] = -\lambda P[N(t) = 0].
+\]
+The solution is this differential equation with initial condition \( P[N(0) = 0] = 1 \) is
+\[
+  P[N(t) = 0] = e^{-\lambda t}.
+\]
+Now, given a fixed \( n \geq 1 \), \(  P[N(t + \Delta t) = n] \) can be split into three different successes:
+\begin{enumerate}
+  \item There is no increment in \( \Delta t \): \(  P[N(t) = n] \) and \(P[\Delta N(t) = 0]\).
+  \item There is one increment in \( Delta t \): \(P[N(t) = n-1]\) and \(P[\Delta N(t) = 1] \)
+\item There is more than 1 increment in \( \Delta t \): \(  P[N(t + \Delta t) = n]\) and \(P[\Delta N(t) \geq 2] \).
+\end{enumerate}
+Thus,
+\[
+  \begin{aligned}
+    P[N(t + \Delta t) = n] &= P[N(t) = n]P[\Delta N(t) = 0]\\
+    &\ + P[N(t) = n-1]P[\Delta N(t) = 1] \\
+    &\ + P[N(t + \Delta t) = n]P[\Delta N(t) \geq 2]\\
+    \end{aligned}
+  \]
+  Where the last term is \( o(\Delta t) \), following the same procedure done before:
+  \[
+    \frac{P[N(t + \Delta t) = n] - P[N(t) = n]}{\Delta t} = -\lambda P[N(t) = n] + \lambda P([N(t) = n-1]) + \frac{o(\Delta t)}{\Delta t}
+  \]
+  Limiting in \( \Delta t \to 0^{+} \):
+  \[
+    \frac{d}{dt}P[N(t) = n] =  -\lambda P[N(t) = n] + \lambda P([N(t) = n-1])
+  \]
+  Multiplying by \( e^{\lambda t} \)
+\[
+  e^{\lambda t}\left( \frac{d}{dt}P[N(t) = n]- + \lambda P[N(t) = n] \right) = e^{\lambda t}\lambda P([N(t) = n-1])
+\]
+\[
+  \downarrow
+\]
+\[
+  \frac{d}{dt} e^{\lambda t}P[N(t) = n] = e^{\lambda t}\lambda P([N(t) = n-1]).
+\]
+Evaluating in \( n = 1 \) and using that \(  P([N(t) = 0]) = e^{-\lambda t}  \)
+\[
+   \frac{d}{dt} e^{\lambda t}P[N(t) = 1] = e^{\lambda t}\lambda P([N(t) = 0]) = \lambda e^{-\lambda t}e^{\lambda t} = \lambda.
+ \]
+ Using an inductive procedure, and supposing that \( P[N(t) = n-1] = \frac{1}{(n-1)!}\lambda^{n-1}t^{n-1} e^{-\lambda t} \).
+ \[
+    \frac{d}{dt} e^{\lambda t}P[N(t) = n] = e^{\lambda t}\lambda P([N(t) = n-1]) = \frac{\lambda}{(n-1)!}\lambda^{n-1}t^{n-1}
+ \]
+\[
+  e^{\lambda t}P[N(t) = n] = \frac{1}{n!}\lambda^{n}t^{n} + c.
+\]
+Where \( c = 0 \) given that \( P[N(t) = n] = 0\).
+\newpage

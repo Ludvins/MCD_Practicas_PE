@@ -1,0 +1,42 @@
+
+\textbf{Exercise 3. }\emph{Assume that we have a sample \( \{u_{i}\}_{i=1,\dots,n} \) of \( n \) i.i.d  \(U_{i} \sim U[0, t] \) variables. The probability density of the order statistics \( \{U_{(1)} < U_{(2)} < \cdots < U_{(n)}\} \)  is}
+\[
+  f_{U_{(1)},\dots,U_{(n)}}(u_{(1)},\dots,u_{(n)}) = \frac{n!}{t^{n}}.
+\]
+
+\emph{Let \( \{N(t); \, t \geq 0\} \) be a Poisson process with rate \( \lambda \). show that conditioned on \( N(t) = n \), the distribution of the arrival times \( \{0 < S_{1} < S_{2} < \dots < S_{n}\} \) coincides with the distribution of order statistics of \( n \) i.i.d \( U[0, t] \) random variables}
+\[
+  f_{S_{1},\dots,S_{n} \mid N(t)}(s_{1},\dots, s_{n} \mid N(t) = n) = \frac{n!}{t^{n}}.
+\]
+\textbf{Solo si \( t \geq s_{n} \), en otro caso es \( 0 \) Cambiarla por:}.
+\[
+  f_{S_{1},\dots,S_{n} \mid N(t)}(s_{1},\dots, s_{n} \mid N(t) = n) = \begin{cases} \frac{n!}{t^{n}} &t \geq s_{n}\\ 0 &\text{otherwise} \end{cases}.
+\]
+\emph{Solution. } Using the Bayes theorem:
+\[
+  f(s_{1},\dots, s_{n+1} \mid N(t) = n) = \frac{ f(N(t) = n \mid s_{1},\dots, s_{n+1}) f(s_{1},\dots, s_{n+1})  }{ f(N(t) = n)  }.
+\]
+Where subindexes are removed in order to clarify the structure. We may use that \( N(t) = n \iff s_{n} \leq t < s_{n+1} \) in order to write
+\[
+  f(N(t) = n \mid s_{1},\dots, s_{n+1}) = \begin{cases} 1 & s_{n} \leq t < s_{n+1}\\ 0 &\text{otherwise} \end{cases}.
+\]
+Given this distinction, the previous density verifies
+\[
+   f(s_{1},\dots,s_{n+1} \mid N(t) = n) \neq 0 \iff s_{n} \leq t < s_{n+1}.
+ \]
+ Which makes sense: \emph{the probability of having \( s_{1},\dots,s_{n+1} \) arrival times is zero if after \( s_{n} \) there are not \( n \) events.}
+
+ We are now focusing in the case \( s_{n} \leq t < s_{n+1} \), where the density verifies
+ \[
+    f(s_{1},\dots, s_{n+1} \mid N(t) = n) = \frac{ f(s_{1},\dots, s_{n+1})  }{ f(N(t) = n)  } = \frac{\lambda ^{n+1} \exp(-\lambda s_{n+1})}{\frac{1}{n!} (\lambda t)^{n} \exp (- \lambda t)} = \frac{n! \exp(-\lambda (s_{n+1}-t))}{t^{n}}.
+ \]
+
+Using the \emph{memoryless} property for \( s_{n+1} > t \)
+\[
+  f(s_{1},\dots,s_{n+1} \mid n) = f(s_{n+1} \mid s_{1},\dots, s_{n}, n)f(s_{1},\dots,s_{n}\mid n) = f(s_{n+1} \mid n)f(s_{1},\dots,s_{n}\mid n)
+\]
+Substituting in the above formula:
+\[
+  f(s_{1},\dots,s_{n}\mid n) = \frac{n!}{t^{n}} \frac{\exp(-\lambda (s_{n+1}-t))}{P(s_{n+1} \mid n) } = \frac{n!}{t^{n}}.
+\]
+Conditional on \( N(t) = n \), \( S_{n+1} \) is the first arrival event after \( t \), whose probability is

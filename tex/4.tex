@@ -1,0 +1,47 @@
+
+\textbf{Exercise 4. }\emph{Two teams A and B play a soccer match. The number of goals scored by Team A is modeled by a Poisson process \( N_{1}(t) \) with rate \( \lambda_{1} = 0.02 \) goals per minute. The number of goals scored by Team B is modeled by a Poisson process \( N_{2}(t)\) with rate \( \lambda_{2} = 0.03\) goals per minute. The two processes are assumed to be independent. Let \( N(t) \) be the total number of goals in the game up to and including time \( t \). The game lasts for \( 90 \) minutes.}
+\begin{enumerate}
+  \item \emph{Find the probability that no goals are scored}.
+  \item \emph{Find the probability that at least two goals are scored in the game.}
+  \item \emph{Find the probability of the final score being \( A:1 \), \( B:2\). }
+  \item  \emph{Find the probability that they draw}.
+  \item  \emph{Find the probability that Team B scores the first goal}.
+\end{enumerate}
+\emph{Confirm your results by writing a Python program that simulates the process and estimate the answers from the simulations.}
+
+In this problem, the series representation of the modifier Bessel function of order \( \nu \) can be useful
+\[
+  I_{\nu}(x) = \sum_{n=0}^{\infty} \frac{1}{n! \Gamma(n + \nu + 1)}\left( \frac{x}{2} \right)^{2n + \nu}
+\]
+
+\emph{Solution. }
+\begin{enumerate}
+  \item The probability that no goals are scored equals
+        \[
+        P[N(90) = 0] = P[N_{1}(90) + N_{2}(90) = 0] = P[N_{1}(90) = 0]P[N_{2}(90) = 0] = e^{-\lambda_{1}90}e^{-\lambda_{2}90} = 0.0111090\dots
+        \]
+  \item The probability that at least two goals are scored in the game is
+        \[
+        \begin{aligned}
+          P[N(90) > 1] &= P[N_{1}(90) + N_{2}(90) > 1] \\
+          =& 1 - P[N_{1}(90) = 0]P[N_{2}(90) = 0] \\
+          &- P[N_{1}(90) = 1]P[N_{2}(90) = 0] -P[N_{1}(90) = 0]P[N_{2}(90) = 1]\\
+          =& 1 - e^{-\lambda_{1}90 - \lambda_{2}90} - \lambda_{1}90e^{-\lambda_{1}90 - \lambda_{2}90} - \lambda_{2}90e^{-\lambda_{1}90 - \lambda_{2}90}\\
+          =&
+          \end{aligned}
+        \]
+  \item The probability of finishing with a score of \( A:1 \) and \( B:2 \):
+        \[
+        P[N_{1}(90) = 1]P[N_{2}(90) = 2] = \lambda_{1}90e^{-\lambda_{1}90} \frac{1}{2}\lambda_{2}^{2}90^{2}e^{-\lambda_{2}90}
+        \]
+  \item The probability that they draw is
+        \[
+        \sum_{n=1}^{\infty} P[N_{1}(90) = n]P[N_{2}(90) = n] = \sum_{n=1}^{\infty}\frac{1}{n!^{2}}\lambda_{1}^{n}\lambda_{2}^{n}90^{2n}e^{-\lambda_{1}90 - \lambda_{2}90}
+        \]
+  \item The probability that team B scores the first goal is
+        \[
+        \sum_{t=0}^{90} P[N_{1}(t) = 0]P[N_{2}(t) = 1] = \sum_{t=0}^{90}\lambda_{2}te^{-\lambda_{2}t - \lambda_{1}t}
+        \]
+
+
+\end{enumerate}
