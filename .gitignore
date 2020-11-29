@@ -1,0 +1,10 @@
+resources/
+.auctex-auto
+*.out
+*.aux
+*.log
+*.toc
+*.nav
+*.fdb_latexmk
+*.synctex.gz
+*.fls
