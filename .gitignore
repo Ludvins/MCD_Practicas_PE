@@ -1,4 +1,5 @@
 resources/
+__pycache__
 .auctex-auto
 *.out
 *.aux
