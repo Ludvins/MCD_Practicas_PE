@@ -9,9 +9,9 @@
   f_{S_{1},\dots,S_{n} \mid N(t)}(s_{1},\dots, s_{n} \mid N(t) = n) = \frac{n!}{t^{n}}.
 \]
 
-\emph{Solution.} Consider a fixed sample $\{s_1, \dots, s_n\}$ of arrival times, where necessarily $t\geq s_n$. From now on, we will drop the subindexes where possible to avoid cluttering the notation, and will use ``$f$'' to represent a p.d.f. and a p.m.f. interchangeably. We split up the proof in several steps.
+\emph{Solution.} Consider a fixed sample $\{s_1, \dots, s_n\}$ of arrival times, where necessarily $t\geq s_n$. From now on, we will drop the subindexes when possible to avoid cluttering the notation, and we will use ``$f$'' to represent both a p.d.f. and a p.m.f. interchangeably. We split up the proof in several steps.
 
-Firstly, using Bayes' theorem, we have:
+Firstly, using Bayes' theorem we have:
 \begin{equation}
   \label{eq:bayes}
   f(s_{1},\dots, s_{n+1} \mid N(t) = n) = \frac{ f(N(t) = n \mid s_{1},\dots, s_{n+1}) f(s_{1},\dots, s_{n+1})  }{ f(N(t) = n)  }.
@@ -24,9 +24,9 @@ From this distinction and looking at Eq. \eqref{eq:bayes} it follows that
 \[
    f(s_{1},\dots,s_{n+1} \mid N(t) = n) \neq 0 \iff s_{n} \leq t < s_{n+1},
  \]
- which makes perfect sense: \emph{the probability of observing $n+1$ events at times $s_1, \dots, s_{n+1}$, having observed $n$ events at time $t$, is positive if and only if the $n$ events were observed just at or after the second-to-last arrival time andstrictly before the last one.}
+ which makes perfect sense: \emph{the probability of observing $n+1$ events at times $s_1, \dots, s_{n+1}$, having observed $n$ events at time $t$, is positive if and only if the $n$ events were observed just at or after the second-to-last arrival time and strictly before the last one.}
 
-For this reason we will be focusing on the case \(s_{n} \leq t < s_{n+1} \), in which Eq. \eqref{eq:bayes} translates to\footnote{The expression for $f(s_1,\dots,s_{n+1})$ can be derived from the fact that the time increments $T_i=S_{i}-S_{i-1}$ are identically exponentially distributed and independent: $f(s_1,\dots,s_{n+1})=f(T_1=s_1)f(T_2=s_2-s_1)\cdots f(T_{n+1}=s_{n+1}-s_n)$.}
+For this reason we will be focusing on the case \(s_{n} \leq t < s_{n+1} \), in which Eq. \eqref{eq:bayes} translates to\footnote{The expression for $f(s_1,\dots,s_{n+1})$ can be derived from the fact that the time increments $T_i=S_{i}-S_{i-1}$ are identically (exponentially) distributed and independent: $f(s_1,\dots,s_{n+1})=f(T_1=s_1)f(T_2=s_2-s_1)\cdots f(T_{n+1}=s_{n+1}-s_n)$.}
  \begin{equation}
    \label{eq:aux3}
     f(s_{1},\dots, s_{n+1} \mid N(t) = n) = \frac{ f(s_{1},\dots, s_{n+1})  }{ f(N(t) = n)  } = \dfrac{\lambda ^{n+1} \exp(-\lambda s_{n+1})}{\frac{1}{n!} (\lambda t)^{n} \exp (- \lambda t)} = \frac{n! \lambda \exp(-\lambda (s_{n+1}-t))}{t^{n}}.
