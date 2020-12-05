@@ -1,42 +1,50 @@
 
-\textbf{Exercise 3. }\emph{Assume that we have a sample \( \{u_{i}\}_{i=1,\dots,n} \) of \( n \) i.i.d  \(U_{i} \sim U[0, t] \) variables. The probability density of the order statistics \( \{U_{(1)} < U_{(2)} < \cdots < U_{(n)}\} \)  is}
+\textbf{Exercise 3. }\emph{Assume that we have a sample \( \{U_{i}\}_{i=1,\dots,n} \) of \( n \) i.i.d  \(U_{i} \sim U[0, t] \) random variables. The probability density of the order statistics \( \{U_{(1)} < U_{(2)} < \cdots < U_{(n)}\} \)  is}
 \[
   f_{U_{(1)},\dots,U_{(n)}}(u_{(1)},\dots,u_{(n)}) = \frac{n!}{t^{n}}.
 \]
 
-\emph{Let \( \{N(t); \, t \geq 0\} \) be a Poisson process with rate \( \lambda \). show that conditioned on \( N(t) = n \), the distribution of the arrival times \( \{0 < S_{1} < S_{2} < \dots < S_{n}\} \) coincides with the distribution of order statistics of \( n \) i.i.d \( U[0, t] \) random variables}
+\emph{Let \( \{N(t): \, t \geq 0\} \) be a Poisson process with rate \( \lambda \). show that conditioned on \( N(t) = n \), the distribution of the arrival times \( \{0 < S_{1} < S_{2} < \dots < S_{n}\} \) coincides with the distribution of order statistics of \( n \) i.i.d \( U[0, t] \) random variables, i.e.:}
 \[
   f_{S_{1},\dots,S_{n} \mid N(t)}(s_{1},\dots, s_{n} \mid N(t) = n) = \frac{n!}{t^{n}}.
 \]
-\textbf{Solo si \( t \geq s_{n} \), en otro caso es \( 0 \) Cambiarla por:}.
-\[
-  f_{S_{1},\dots,S_{n} \mid N(t)}(s_{1},\dots, s_{n} \mid N(t) = n) = \begin{cases} \frac{n!}{t^{n}} &t \geq s_{n}\\ 0 &\text{otherwise} \end{cases}.
-\]
-\emph{Solution. } Using the Bayes theorem:
-\[
+
+\emph{Solution.} Consider a fixed sample $\{s_1, \dots, s_n\}$ of arrival times, where necessarily $t\geq s_n$. From now on, we will drop the subindexes where possible to avoid cluttering the notation, and will use ``$f$'' to represent a p.d.f. and a p.m.f. interchangeably. We split up the proof in several steps.
+
+Firstly, using Bayes' theorem, we have:
+\begin{equation}
+  \label{eq:bayes}
   f(s_{1},\dots, s_{n+1} \mid N(t) = n) = \frac{ f(N(t) = n \mid s_{1},\dots, s_{n+1}) f(s_{1},\dots, s_{n+1})  }{ f(N(t) = n)  }.
-\]
-Where subindexes are removed in order to clarify the structure. We may use that \( N(t) = n \iff s_{n} \leq t < s_{n+1} \) in order to write
+\end{equation}
+Now we may use the self-evident fact that \( N(t) = n \iff s_{n} \leq t < s_{n+1} \) in order to write
 \[
   f(N(t) = n \mid s_{1},\dots, s_{n+1}) = \begin{cases} 1 & s_{n} \leq t < s_{n+1}\\ 0 &\text{otherwise} \end{cases}.
 \]
-Given this distinction, the previous density verifies
+From this distinction and looking at Eq. \eqref{eq:bayes} it follows that
 \[
-   f(s_{1},\dots,s_{n+1} \mid N(t) = n) \neq 0 \iff s_{n} \leq t < s_{n+1}.
+   f(s_{1},\dots,s_{n+1} \mid N(t) = n) \neq 0 \iff s_{n} \leq t < s_{n+1},
  \]
- Which makes sense: \emph{the probability of having \( s_{1},\dots,s_{n+1} \) arrival times is zero if after \( s_{n} \) there are not \( n \) events.}
+ which makes perfect sense: \emph{the probability of observing $n+1$ events at times $s_1, \dots, s_{n+1}$, having observed $n$ events at time $t$, is positive if and only if the $n$ events were observed just at or after the second-to-last arrival time andstrictly before the last one.}
 
- We are now focusing in the case \( s_{n} \leq t < s_{n+1} \), where the density verifies
- \[
-    f(s_{1},\dots, s_{n+1} \mid N(t) = n) = \frac{ f(s_{1},\dots, s_{n+1})  }{ f(N(t) = n)  } = \frac{\lambda ^{n+1} \exp(-\lambda s_{n+1})}{\frac{1}{n!} (\lambda t)^{n} \exp (- \lambda t)} = \frac{n! \exp(-\lambda (s_{n+1}-t))}{t^{n}}.
- \]
+For this reason we will be focusing on the case \(s_{n} \leq t < s_{n+1} \), in which Eq. \eqref{eq:bayes} translates to\footnote{The expression for $f(s_1,\dots,s_{n+1})$ can be derived from the fact that the time increments $T_i=S_{i}-S_{i-1}$ are identically exponentially distributed and independent: $f(s_1,\dots,s_{n+1})=f(T_1=s_1)f(T_2=s_2-s_1)\cdots f(T_{n+1}=s_{n+1}-s_n)$.}
+ \begin{equation}
+   \label{eq:aux3}
+    f(s_{1},\dots, s_{n+1} \mid N(t) = n) = \frac{ f(s_{1},\dots, s_{n+1})  }{ f(N(t) = n)  } = \dfrac{\lambda ^{n+1} \exp(-\lambda s_{n+1})}{\frac{1}{n!} (\lambda t)^{n} \exp (- \lambda t)} = \frac{n! \lambda \exp(-\lambda (s_{n+1}-t))}{t^{n}}.
+ \end{equation}
+Next, we will use the fact that the conditional probability factorizes as:
+\[
+  f(s_{1},\dots,s_{n+1} \mid N(t)=n) = f(s_{n+1} \mid s_{1},\dots, s_{n}, N(t)=n)f(s_{1},\dots,s_{n}\mid N(t)=n),
+\]
+and also the \emph{memoryless} property for \( s_{n+1} > t \):
+\[
+  f(s_{n+1} \mid s_{1},\dots, s_{n}, N(t)=n) = f(s_{n+1} \mid N(t)=n).
+\]
 
-Using the \emph{memoryless} property for \( s_{n+1} > t \)
+Combining these two properties, we have:
 \[
-  f(s_{1},\dots,s_{n+1} \mid n) = f(s_{n+1} \mid s_{1},\dots, s_{n}, n)f(s_{1},\dots,s_{n}\mid n) = f(s_{n+1} \mid n)f(s_{1},\dots,s_{n}\mid n)
+f(s_1,\dots, s_n \mid N(t)=n) = \frac{f(s_1,\dots, s_{n+1} \mid N(t)=n)}{f(s_{n+1}\mid N(t)=n)}.
 \]
-Substituting in the above formula:
+The numerator in the RHS of the previous expression is given by Eq. \eqref{eq:aux3}}. The denominator can be comptued if we realize that, conditional on $N(t)=n$, the time instant $s_{n+1}$ is the \textit{first arrival time after time $t$}. In other words, it follows the same distribution as the first arrival time if the origin had been put at time $t$, whichs is an \textit{Erlang}$(1,\lambda)$ shifted by the location parameter $t$. Putting it all together we arrive at the desired result:
 \[
-  f(s_{1},\dots,s_{n}\mid n) = \frac{n!}{t^{n}} \frac{\exp(-\lambda (s_{n+1}-t))}{P(s_{n+1} \mid n) } = \frac{n!}{t^{n}}.
-\]
-Conditional on \( N(t) = n \), \( S_{n+1} \) is the first arrival event after \( t \), whose probability is
+  f(s_{1},\dots,s_{n}\mid N(t)=n) = \frac{n!}{t^{n}} \frac{\lambda\exp(-\lambda (s_{n+1}-t))}{\lambda\exp(-\lambda (s_{n+1}-t))} = \frac{n!}{t^{n}}.
+\]\hfill $\square$\\
