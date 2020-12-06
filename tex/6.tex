@@ -1,0 +1,36 @@
+
+\textbf{Exercise 6. }\emph{Consider the wiener (standard Brownian) process \( W(t) \)  in \( [0, 1] \),}
+\begin{itemize}
+  \item[\textit{i)}] \emph{from the property of independent increments, let \( t_{2} \geq t_{1} \geq s_{2} \geq s_{1} \geq 0 \) }:
+        \[
+        \mathbb{E}[(W(t_{2}) - W(t_{1}))(W(s_{2}) - W(s_{1}))] = \mathbb{E}[W(t_{2}) - W(t_{1})]\mathbb{E}[W(s_{2}) - W(s_{1})],
+        \]
+        \emph{show that the autocovariances are given by}
+        \[
+        \gamma(t, s) = \mathbb{E}[W(t)W(s)] = min(t,s).
+        \]
+        \item[\textit{ii)}] \emph{Illustrate this property by simulating a Wiener process in \( [0 ,1] \) and making a plot of he sample estimate and the theoretical values of \( \gamma(t, 0.25) \) as a function of \( t \in [0, 1] \).}
+\end{itemize}
+
+
+\begin{itemize}
+  \item[\textit{i)}] Let \( t > s \). Using that \( W(t) = (W(t) - W(s)) + W(s) \) we may write the desired covariance as
+        \[
+        \gamma(t, s) = \mathbb{E}[W(t)W(s)] = \mathbb{E}[ ((W(t) - W(s)) + W(s))W(s)] = \mathbb{E}[(W(t) - W(s))W(s)] + \mathbb{E}[W(s)^{2}]
+        \]
+        Using that \( W(s) = W(s) - W(0) \):
+        \[
+        \mathbb{E}[(W(t) - W(s))W(s)] = \mathbb{E}[(W(t) - W(s))(W(s) - W(0))] = \mathbb{E}[W(t) - W(s)]\mathbb{E}[W(s)] = 0
+        \]
+        Where the last equality holds as the process has independent increments, i.e
+        \[
+        W(t) - W(s) \perp W(s) - W(0) = W(0) \implies \mathbb{E}[W(t) - W(s)]\mathbb{E}[W(s)] = 0
+        \]
+        Thus,
+        \[
+        \gamma(t, s) = \mathbb{E}[W(s)^{2}] = s = min(t, s)
+        \]
+        As choosing \( t > s \) is arbitrary, swapping them throughout the proof gives the analogous result.
+
+        \item[\textit{ii)}] \emph{Illustrate this property by simulating a Wiener process in \( [0 ,1] \) and making a plot of he sample estimate and the theoretical values of \( \gamma(t, 0.25) \) as a function of \( t \in [0, 1] \).}
+\end{itemize}
