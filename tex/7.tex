@@ -1,0 +1,18 @@
+
+\textbf{Exercise 7. }\emph{Consider two independent wiener processes \( W(t) \) and \( W'(t) \). Show that the following processes have the same covariances as the standard Wiener process:}
+
+\begin{itemize}
+  \item[\textit{a)}] \( \rho W(t) + \sqrt{1 - \rho^{2}}W'(t)\quad t \geq 0 \).
+  \item[\textit{b)}] \( -W(t) \quad t\geq 0 \).
+  \item[\textit{c)}] \( \sqrt{c}W(t/c)\quad t \geq 0, c > 0 \).
+  \item[\textit{d)}] \( V(0) = 0, V(t) = tW(1/t) \quad t> 0 \).
+\end{itemize}
+\emph{Make a plot of the trajectories of the first three processes to illustrate that they are standard Brownian motion processes. Compare the histogram of the final values of the simulated trajectories with the theoretical density function.}
+
+\emph{Solution. } We seek to show that the following covariances are equal to \( t \).
+\begin{itemize}
+  \item[\textit{a)}] \( Var[\rho W(t) + \sqrt{1 - \rho^{2}}W'(t)] = \rho^{2}Var[W(t)] + (1 - \rho^{2})Var[W'(t)] = (\rho^{2} + ( 1 - \rho^{2} ))t = t \quad t \geq 0 \).
+  \item[\textit{b)}] \( Var[-W(t)] = Var[W(t)] = t \quad t\geq 0 \).
+  \item[\textit{c)}] \( Var[\sqrt{c}W(t/c)] = cVar[W(t/c)] ) c\ t/c = t \quad t \geq 0, c > 0 \).
+  \item[\textit{d)}] \( Var[V(t)] = Var[tW(1/t)] = t^{2}Var[W(1/t)] = t \quad t> 0 \) y \( V(0) = 0 \implies Var(V(0)) = 0 \).
+\end{itemize}
