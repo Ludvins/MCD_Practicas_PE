@@ -1,47 +1,65 @@
 
 \textbf{Exercise 4. }\emph{Two teams A and B play a soccer match. The number of goals scored by Team A is modeled by a Poisson process \( N_{1}(t) \) with rate \( \lambda_{1} = 0.02 \) goals per minute. The number of goals scored by Team B is modeled by a Poisson process \( N_{2}(t)\) with rate \( \lambda_{2} = 0.03\) goals per minute. The two processes are assumed to be independent. Let \( N(t) \) be the total number of goals in the game up to and including time \( t \). The game lasts for \( 90 \) minutes.}
 \begin{enumerate}
-  \item \emph{Find the probability that no goals are scored}.
-  \item \emph{Find the probability that at least two goals are scored in the game.}
-  \item \emph{Find the probability of the final score being \( A:1 \), \( B:2\). }
-  \item  \emph{Find the probability that they draw}.
-  \item  \emph{Find the probability that Team B scores the first goal}.
+  \item[\textit{(i)}] \emph{Find the probability that no goals are scored}.
+  \item[\textit{(ii)}] \emph{Find the probability that at least two goals are scored in the game.}
+  \item[\textit{(iii)}] \emph{Find the probability of the final score being Team A: 1, Team B: 2.}
+  \item[\textit{(iv)}]  \emph{Find the probability that they draw}.
+  \item[\textit{(v)}]  \emph{Find the probability that Team B scores the first goal}.
 \end{enumerate}
 \emph{Confirm your results by writing a Python program that simulates the process and estimate the answers from the simulations.}
 
-In this problem, the series representation of the modifier Bessel function of order \( \nu \) can be useful
-\[
-  I_{\nu}(x) = \sum_{n=0}^{\infty} \frac{1}{n! \Gamma(n + \nu + 1)}\left( \frac{x}{2} \right)^{2n + \nu}
-\]
-
-\emph{Solution. }
+\emph{Solution.} We know that the sum of two independent Poisson processes is also a Poisson process with rate equal to the sum of the rates, so we can write $N(t)\sim Poisson(0.05)$. We will make repeated use of the expression of the p.m.f. of a Poisson process (see Eq. \eqref{eq:1}).
 \begin{enumerate}
-  \item The probability that no goals are scored equals
+  \item[\textit{(i)}] The probability that no goals are scored equals:
         \[
-        P[N(90) = 0] = P[N_{1}(90) + N_{2}(90) = 0] = P[N_{1}(90) = 0]P[N_{2}(90) = 0] = e^{-\lambda_{1}90}e^{-\lambda_{2}90} = 0.0111090\dots
+        P[N(90) = 0] = \frac{1}{0!}(0.05\cdot 90)^0 e^{-0.05\cdot 90} = e^{-4.5} \approx 0.0111.
         \]
-  \item The probability that at least two goals are scored in the game is
+  \item[\textit{(ii)}] The probability that at least two goals are scored in the game is:
         \[
         \begin{aligned}
-          P[N(90) > 1] &= P[N_{1}(90) + N_{2}(90) > 1] \\
-          =& 1 - P[N_{1}(90) = 0]P[N_{2}(90) = 0] \\
-          &- P[N_{1}(90) = 1]P[N_{2}(90) = 0] -P[N_{1}(90) = 0]P[N_{2}(90) = 1]\\
-          =& 1 - e^{-\lambda_{1}90 - \lambda_{2}90} - \lambda_{1}90e^{-\lambda_{1}90 - \lambda_{2}90} - \lambda_{2}90e^{-\lambda_{1}90 - \lambda_{2}90}\\
-          =&
-          \end{aligned}
+          P[N(90) \geq 2] &= 1 - P[N(90)\leq 1] = 1 - \left( P[N(90)=0]+P[N(90)=1]\right)\\
+          &= 1 - (e^{-4.5} + 0.05 \cdot 90 e^{-4.5}) \approx 0.9389.
+        \end{aligned}
         \]
-  \item The probability of finishing with a score of \( A:1 \) and \( B:2 \):
+  \item[\textit{(iii)}] Since $N_1(t)$ and $N_2(t)$ are independent, the probability of finishing with a score of Team A: $1$ and Team B: $2$ is:
         \[
-        P[N_{1}(90) = 1]P[N_{2}(90) = 2] = \lambda_{1}90e^{-\lambda_{1}90} \frac{1}{2}\lambda_{2}^{2}90^{2}e^{-\lambda_{2}90}
+        \begin{aligned}
+        &P[N_1(90)=1, N_2(90)=2] = P[N_{1}(90) = 1]P[N_{2}(90) = 2]\\
+        &= 0.02\cdot 90e^{-0.02 \cdot 90} \frac{1}{2}\cdot 0.03^{2}\cdot 90^{2}e^{-0.03\cdot90} \approx 0.0729.
+      \end{aligned}
         \]
-  \item The probability that they draw is
+  \item[\textit{(iv)}] The probability that they draw is given by the expression:
         \[
-        \sum_{n=1}^{\infty} P[N_{1}(90) = n]P[N_{2}(90) = n] = \sum_{n=1}^{\infty}\frac{1}{n!^{2}}\lambda_{1}^{n}\lambda_{2}^{n}90^{2n}e^{-\lambda_{1}90 - \lambda_{2}90}
+        P[N_1(90) = N_2(90)] = \sum_{n=0}^{\infty} P[N_{1}(90) = n]P[N_{2}(90) = n] = \sum_{n=0}^{\infty}\frac{1}{(n!)^{2}}0.02^{n}0.03^{n}90^{2n}e^{-90(0.03 + 0.02)}.
         \]
-  \item The probability that team B scores the first goal is
-        \[
-        \sum_{t=0}^{90} P[N_{1}(t) = 0]P[N_{2}(t) = 1] = \sum_{t=0}^{90}\lambda_{2}te^{-\lambda_{2}t - \lambda_{1}t}
-        \]
-
-
+        We could try to sum this infinite series, but we are better off using the fact that the difference of two independent Poisson variables follows a \href{https://en.wikipedia.org/wiki/Skellam_distribution}{Skellam distribution}. Indeed, if $V_1$ and $V_2$ are two independent Poisson-distributed random variables with means $\lambda_1$ and $\lambda_2$ respectively, the p.m.f. for the difference $V=V_1-V_2$ is given by:
+        \begin{equation}\label{eq:skellam}
+        p(\nu; \lambda_1, \lambda_2) = P[V=\nu]=e^{-(\lambda_1+\lambda_2)}\left(\frac{\lambda_1}{\lambda_2}\right)^{\nu/2}I_{\nu}(2\sqrt{\lambda_1\lambda_2}),
+      \end{equation}
+        where $I_\nu(x)$ is the modified Bessel function of the first kind of order \( \nu \), i.e.:
+\[
+  I_{\nu}(x) = \sum_{n=0}^{\infty} \frac{1}{n! \Gamma(n + \nu + 1)}\left( \frac{x}{2} \right)^{2n + \nu}.
+\]
+Now we can compute the desired probability with the aid of Python, either by evaluating the p.m.f. of a $Skellam(90\cdot 0.02, 90\cdot 0.03)$ at $\nu=0$ with \verb|scipy.stats.skellam|, or by substituting the appropriate values in Eq. \eqref{eq:skellam} and evaluating $I_0$ in the corresponding point via \verb@scipy.special.iv@. Either way, we have:
+\[
+P[N_1(90)- N_2(90) = 0]=e^{-90\cdot 0.05}I_0(2\cdot 90\sqrt{0.02\cdot 0.03}) \approx 0.1793.
+\]
+  \item[\textit{(v)}] Let $X$ model the time of the first goal scored by Team B, and let $Y$ be the number of goals scored by Team A before Team B scores. On the one hand we have that, conditional on $X=t$, the variable $Y$ is counting the number of events (goals of Team A) up to time $t$, so it may be viewed as a Poisson variable with mean $0.02t$:
+  \[
+  P[Y=n\mid X=t]=\frac{1}{n!}(0.02t)^n e^{-0.02t}.
+  \]
+  On the other hand, the distribution of $X$ is that of the first arrival time of the Poisson process $N_2(t)$, which is known to be exponentially distributed:
+  \[
+  P[X=t]= 0.03e^{-0.03t}.
+  \]
+  With this notation, we are interested in computing the probability of $Y=0$, given the restrictions that $0\leq X\leq 90$ (that is, we are requiring that Team B scores at least once). Combining the above expressions and using the \textit{law of total probability}, we get:
+  \[
+  \begin{aligned}
+  &P[Y=0\mid0\leq X \leq 90]=\int_0^{90} P[Y=0\mid X=t]P[X=t]\, dt\\
+  &=  \int_0^{90}0.03 e^{-0.05t}\, dt= -\frac{0.03}{0.05}\Big[ e^{-0.05t}\Big]_0^{90} \approx 0.5933.
+\end{aligned}
+  \]
 \end{enumerate}
+
+The code which contains the simulations that illustrate the correctness of these results can be consulted in \verb|ex4.ipynb|.
