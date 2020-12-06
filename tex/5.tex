@@ -1,15 +1,16 @@
 
-\textbf{Exercise 5. }\emph{Consider the process \( X(t) = X\sqrt{t} \) for \( t \geq 0 \) withthe same value of \( Z \) for all \( t \).}
-\begin{itemize}
-  \item[\textit{a)}] \emph{Show that the distribution of the process at time \( t \) is the same as that of a Wiener process: \( X(t) \sim \mathcal(N)(0, \sqrt{t}) \).
-  \item[\textit{b)}] \emph{What is themathematical property that allows us to prove that this process is not Brownian?}
-\end{itemize}
+\textbf{Exercise 5. }\emph{Consider the process \( X(t) = Z\sqrt{t} \) for \( t \geq 0 \) with the same value of \( Z \) for all \( t \).}
+\begin{enumerate}
+  \item[\textit{(i)}] \emph{Show that the distribution of the process at time \( t \) is the same as that of a Wiener process\footnote{The notation $\mathcal N(\mu, \sigma)$ used in this document assumes that $\sigma$ is the \textit{standard deviation} of the distribution, and not the variance.}: \( X(t) \sim \mathcal{N}(0, \sqrt{t}) \)}.
+  \item[\textit{(ii)}] \emph{What is the mathematical property that allows us to prove that this process is not Brownian?}
+\end{enumerate}
 
-\emph{Solution. }
-\begin{itemize}
-  \item[\textit{a)}] Assuming \( Z \sim \mathcal{N}(0, 1) \) and using that the standard deviation of a Gaussian distribution is altered :
-        \[
-        X(t) = X \sqrt{t} \sim \sqrt{t}\mathcal{N}(0, 1) = \mathcal{N}(0, t).
-        \]
-  \item[\textit{b)}] The mathematical property that this process does not fulfill is
-\end{itemize}
+\emph{Solution.} Let \( Z \sim \mathcal{N}(0, 1) \). We know that the family of normal distributions is closed under linear transformations, and more specifically, that multiplying a zero-mean normal variable by a constant $a>0$ yields another zero-mean normally-distributed variable for which the standard deviation is the old one times $a$. So it is immediate to see that
+\[
+X(t) = Z \sqrt{t} \sim \sqrt{t}\mathcal{N}(0, 1) = \mathcal{N}(0, \sqrt t).\]
+
+To prove that this process is not Brownian, the key property that we have to use is that of \textit{independence} (or lack thereof). Indeed, since the variable $Z$ is the same for all $t$, given $t_2>t_1\geq s_2> s_1\geq 0$, we have
+\[
+X(t_2) - X(t_1) = Z(\sqrt{t_2} - \sqrt{t_1}) \quad \text{and} \quad X(s_2) - X(s_1) = Z(\sqrt{s_2} - \sqrt{s_1}),
+\]
+which are clearly not independent. Since independent increments are an essential property of Brownian processes, this process cannot be Brownian.

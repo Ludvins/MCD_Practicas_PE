@@ -45,7 +45,7 @@ Now we can compute the desired probability with the aid of Python, either by eva
 \[
 P[N_1(90)- N_2(90) = 0]=e^{-90\cdot 0.05}I_0(2\cdot 90\sqrt{0.02\cdot 0.03}) \approx 0.1793.
 \]
-  \item[\textit{(v)}] Let $X$ model the time of the first goal scored by Team B, and let $Y$ be the number of goals scored by Team A before Team B scores. On the one hand we have that, conditional on $X=t$, the variable $Y$ is counting the number of events (goals of Team A) up to time $t$, so it may be viewed as a Poisson variable with mean $0.02t$:
+  \item[\textit{(v)}] Let $X$ model the time of the first goal scored by Team B, and let $Y$ be the number of goals scored by Team A before Team B scores. On the one hand we have that, conditional on $X=t$, the variable $Y$ is counting the number of events (goals of Team A) up to time $t$, so it may be viewed as a Poisson process with mean $0.02t$:
   \[
   P[Y=n\mid X=t]=\frac{1}{n!}(0.02t)^n e^{-0.02t}.
   \]
