@@ -27,7 +27,7 @@
   \begin{aligned}
     P[N(t + \Delta t) = 0] &\stackrel{(ii)}{=} P[N(t) = 0]P[\Delta N(t) = 0]\\
     &\stackrel{(iii)}{=} P[N(t) = 0](1- \lambda\Delta t + o(\Delta t))\\
-    &= P[N(t) = 0] - P[N(t) = 0]\lambda\Delta t + o(\Delta t).
+    &\ = P[N(t) = 0] - P[N(t) = 0]\lambda\Delta t + o(\Delta t).
     \end{aligned}
   \]
   Rearranging and dividing both sides by \( \Delta t \), we get
@@ -106,7 +106,7 @@ but again \( C = 0 \) since \( P[N(0) = n] = 0\). Thus the inductive step is com
 
 To illustrate the result, we compare the theoretical distribution given by Eq \eqref{eq:1}} (which is a Poisson distribution with parameter $\lambda t$) and the result of many simulations of a Poisson process. In particular, we use two strategies for simulating such a process: one that leverages the fact that interarrival times follow an exponential distribution; and one that uses the order statistics of a certain uniform distribution (see Exercise 3).
 
-Below are the results for 1000 independent simulations with a fixed value of $\lambda = 10$ and $t=2$. That is, we are interested in counting the number of events up to the time instant $t=2$ in a Poisson process governed by a rate $\lambda=10$. The code employed is available in the file \verb|ex1.ipynb|.
+Below are the results for 1000 independent simulations with a fixed value of $\lambda = 10$ and $t=2$. That is, we are interested in counting the number of events up to the time instant $t=2$ in a Poisson process governed by a rate $\lambda=10$.
 
 \begin{figure}[h!]
   \centering

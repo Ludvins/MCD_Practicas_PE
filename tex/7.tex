@@ -1,18 +1,40 @@
 
-\textbf{Exercise 7. }\emph{Consider two independent wiener processes \( W(t) \) and \( W'(t) \). Show that the following processes have the same covariances as the standard Wiener process:}
+\textbf{Exercise 7. }\emph{Consider two independent Wiener processes \( W(t) \) and \( W'(t) \). Show that the following processes have the same covariances as the standard Wiener process:}
 
-\begin{itemize}
-  \item[\textit{a)}] \( \rho W(t) + \sqrt{1 - \rho^{2}}W'(t)\quad t \geq 0 \).
-  \item[\textit{b)}] \( -W(t) \quad t\geq 0 \).
-  \item[\textit{c)}] \( \sqrt{c}W(t/c)\quad t \geq 0, c > 0 \).
-  \item[\textit{d)}] \( V(0) = 0, V(t) = tW(1/t) \quad t> 0 \).
-\end{itemize}
+\begin{enumerate}
+  \item[\textit{(i)}] \( V_1(t)=\rho W(t) + \sqrt{1 - \rho^{2}}W'(t),\quad t \geq 0 \).
+  \item[\textit{(ii)}] \( V_2(t)=-W(t), \quad t\geq 0 \).
+  \item[\textit{(iii)}] \( V_3(t)=\sqrt{c}W(t/c),\quad t \geq 0, c > 0 \).
+  \item[\textit{(iv)}] \( V_4(0) = 0;\ V_4(t) = tW(1/t), \quad t> 0 \).
+\end{enumerate}
 \emph{Make a plot of the trajectories of the first three processes to illustrate that they are standard Brownian motion processes. Compare the histogram of the final values of the simulated trajectories with the theoretical density function.}
 
-\emph{Solution. } We seek to show that the following covariances are equal to \( t \).
-\begin{itemize}
-  \item[\textit{a)}] \( Var[\rho W(t) + \sqrt{1 - \rho^{2}}W'(t)] = \rho^{2}Var[W(t)] + (1 - \rho^{2})Var[W'(t)] = (\rho^{2} + ( 1 - \rho^{2} ))t = t \quad t \geq 0 \).
-  \item[\textit{b)}] \( Var[-W(t)] = Var[W(t)] = t \quad t\geq 0 \).
-  \item[\textit{c)}] \( Var[\sqrt{c}W(t/c)] = cVar[W(t/c)] ) c\ t/c = t \quad t \geq 0, c > 0 \).
-  \item[\textit{d)}] \( Var[V(t)] = Var[tW(1/t)] = t^{2}Var[W(1/t)] = t \quad t> 0 \) y \( V(0) = 0 \implies Var(V(0)) = 0 \).
+\emph{Solution.} We seek to show that the covariance functions of the different processes are all equal to \( \gamma(t, s)=\min(t,s) \), which is the covariance of the standard Wiener process. In all four cases, it is straightforward to show that the mean function $\mathbb E[V_i(t)]$ vanishes on each respective domain, simply by applying the linearity of the expectation operator and remembering that both $W(t)$ and $W'(t)$ have a null mean function.
+
+For this reason, we can write $Cov[V_i(t), V_i(s)] = \mathbb E[V_i(t)V_i(s)]$, $i=1,2,3,4$. Also, it suffices to prove that $\gamma(t,s)=t$ for all $t\leq s$, since the case in which $t>s$ follows by interchanging the roles of $t$ and $s$.
+\begin{enumerate}
+  \item[\textit{(i)}] Let $0\leq t \leq s$. Then:
+  \[ \begin{aligned}
+  \mathbb E[V_1(t) V_1(s)]&=\rho^2\mathbb E[W(t)W(s)]\\
+  &+ \rho\sqrt{1-\rho^2}\mathbb E[W(t)W'(s)] \\
+  &+  \rho\sqrt{1-\rho^2}\mathbb E[W'(t)W(s)] \\
+  &+ (1-\rho^2)\mathbb E[W'(t)W'(s)]\\
+  &=\rho^2t + (1-\rho^2)t = t,
+\end{aligned}
+  \]
+  where the inter-process covariances are $0$ because of the independence of the zero-mean processes $W(t)$ and $W'(t)$.
+  \item[\textit{(ii)}] Let $0\leq t \leq s$. Then:
+  \[
+  \mathbb E[V_2(t) V_2(s)]=\mathbb E[(-W(t))(-W(s))]= \mathbb E[W(t)W(s)] = t.
+  \]
+  \item[\textit{(iii)}] Let $0\leq t \leq s$. Then:
+  \[
+  \mathbb E[V_3(t) V_3(s)]=c\mathbb E[W(t/c)W(s/c)]=c\min\left(\frac{t}{c}, \frac{s}{c}\right)=c\frac{t}{c}=t.
+  \]
+
+  \item[\textit{(iv)}] If $s\geq 0$, it is immediate to see that $\mathbb E[V_4(0)V_4(s)]=0$. On the other hand, if $0<t\leq s$ we have:
+  \[
+  \mathbb E[V_4(t) V_4(s)]=ts\mathbb E[W(1/t) W(1/s)]=ts\min\left(\frac{1}{t}, \frac{1}{s}\right)=ts\frac{1}{s}=t.
+  \]
 \end{itemize}
+We conclude by plotting the first three trajectories, all of which depict a standard Brownian motion; and also the distribution of the final values. The results can be consulted in the attached Python notebook.\\
