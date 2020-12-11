@@ -47,11 +47,13 @@ def simulate_poisson_process_v1(rate, t0, t1, M):
     >>>     print(arr)
     """
     arrivals = [[] for _ in range(M)]
+    beta = 1.0/rate
     for m in range(M):
-        ss = [t0 + expon.rvs(scale=1.0/rate)]
-        while ss[-1] < t1:
-            ss.append(ss[-1] + expon.rvs(scale=1.0/rate))
-        arrivals[m] = np.array(ss)
+        s = t0 + expon.rvs(scale=beta)
+        while s < t1:
+            arrivals[m].append(s)
+            s += expon.rvs(scale=beta)
+        arrivals[m] = np.array(arrivals[m])
 
     return arrivals
 
@@ -322,6 +324,7 @@ def animate_arithmetic_BM(t0, B0, T, mu, sigma, M, N, figsize=None, max_trajecto
 
         # Plot Brownian up to t=t[step]
         axes[0].plot(t[:step], B.T[:step, :Mt])
+        axes[0].plot(t[:step], np.mean(B.T[:step], axis=1), lw=3, color='k')
 
         # Plot empirical distribution at t=t[step]
         axes[1].hist(B[:, step],

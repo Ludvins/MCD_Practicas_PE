@@ -104,13 +104,4 @@ but again \( C = 0 \) since \( P[N(0) = n] = 0\). Thus the inductive step is com
 
 \hfill $\square$
 
-To illustrate the result, we compare the theoretical distribution given by Eq \eqref{eq:1}} (which is a Poisson distribution with parameter $\lambda t$) and the result of many simulations of a Poisson process. In particular, we use two strategies for simulating such a process: one that leverages the fact that interarrival times follow an exponential distribution; and one that uses the order statistics of a certain uniform distribution (see Exercise 3).
-
-Below are the results for 1000 independent simulations with a fixed value of $\lambda = 10$ and $t=2$. That is, we are interested in counting the number of events up to the time instant $t=2$ in a Poisson process governed by a rate $\lambda=10$.
-
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=\textwidth]{img/ex1.pdf}
-\end{figure}
-
-The leftmost graph shows the theoretical distribution, and the other two are the result of the simulations with each strategy. We also superimpose the estimated kernel density (via a Gausian kernel) and the ``true'' density, that is, the theoretical p.m.f. of the Poisson distribution in which the points have been joined in a continuous line. We can see that the simulations accurately represent the theoretical distribution.
+To illustrate the result, we compare the theoretical distribution given by Eq. \eqref{eq:1}} (which is a Poisson distribution with parameter $\lambda t$) and the result of many simulations of a Poisson process. In particular, we use two strategies for simulating such a process: one that leverages the fact that interarrival times follow an exponential distribution; and one that uses the order statistics of a certain uniform distribution (see Exercise 3). The results of the simulation can be seen in the attached notebook.\\
