@@ -1,21 +1,71 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Sep 27 17:29:26 2020
-
 @author: Alberto Suárez
+         Luis Antonio Ortega Andrés
+         Antonio Coín Castro
 """
-# Load packages
+
 import numpy as np
-from scipy import stats
-import matplotlib.pyplot as plt
-import stochastic_plots as stoch
+
+def ode_euler(t0, x0, T, a, N):
+    """Numerical integration of an ODE using the Euler scheme.
+
+        x(t0) = x0
+        dx(t) = a(t, x(t))*dt    [ODE]
+
+    Parameters
+    ----------
+    t0 : float
+        Initial time for the simulation
+    x0 : float
+        Initial level of the process
+    T : float
+        Length of the simulation interval [t0, t0+T]
+    a :
+        Function a(t,x(t)) that characterizes the drift term
+    N: int
+        Number of intervals for the simulation
+
+    Returns
+    -------
+    t: numpy.ndarray of shape (N+1,)
+        Regular grid of discretization times in [t0, t0+T].
+    X: numpy.ndarray of shape (N+1,)
+        Vector composed of the values of the approximated
+        solution trajectory of the equation at t.
+
+    Example
+    -------
+    >>> import matplotlib.pyplot as plt
+    >>> import sde_solvers as sde
+    >>> def a(t, x): return 1.3*x
+    >>> t0, x0 = 0.0, 100.0
+    >>> T = 2.0
+    >>> N = 1000
+    >>> t, X = sde.ode_euler(t0, x0, T, a, N)
+    >>> plt.plot(t, X)
+    """
+    dT = T/N  # size of simulation step
+
+    # Initialize solution array
+    t = np.linspace(t0, t0 + T, N + 1)  # integration grid
+    X = np.zeros(N + 1)
+
+    # Initial condition
+    X[0] = x0
+
+    # Integration of the ODE
+    for n in range(N):
+        X[n + 1] = X[n] + a(t[n], X[n])*dT
+
+    return t, X
 
 
 def euler_maruyana(t0, x0, T, a, b, M, N):
-    """ Numerical integration of an SDE using the stochastic Euler scheme
+    """Numerical integration of an SDE using the stochastic Euler scheme.
 
-    x(t0) = x0
-    dx(t) = a(t, x(t))*dt + b(t, x(t))*dW(t)   [Itô SDE]
+        x(t0) = x0
+        dx(t) = a(t, x(t))*dt + b(t, x(t))*dW(t)    [Itô SDE]
 
     Parameters
     ----------
@@ -37,15 +87,14 @@ def euler_maruyana(t0, x0, T, a, b, M, N):
     Returns
     -------
     t: numpy.ndarray of shape (N+1,)
-        Regular grid of discretization times in [t0, t0+T]
-    X: numpy.ndarray of shape (M,N+1)
+        Regular grid of discretization times in [t0, t0+T].
+    X: numpy.ndarray of shape (M, N+1)
         Simulation consisting of M trajectories.
         Each trajectory is a row vector composed of the values
         of the process at t.
 
     Example
     -------
-
     >>> import matplotlib.pyplot as plt
     >>> import sde_solvers as sde
     >>> t0, S0, T, mu, sigma = 0, 100.0, 2.0, 0.3,  0.4
@@ -59,23 +108,28 @@ def euler_maruyana(t0, x0, T, a, b, M, N):
     >>> _= plt.title('Geometric BM (Euler scheme)')
 
     """
+    dT = T/N  # size of simulation step
 
-    t = np.arange(t0, t0 + T, T / (N + 1))
-    dt = T / (N + 1)
-    X = np.zeros(shape=(M, N + 1))
-    X[:, 0] = np.ones(M) * x0
-    for n in range(1, N + 1):
-        X[:, n] = X[:, n - 1] + a(t[n], X[:, n - 1]) * dt + \
-        b(t[n], X[:, n - 1]) * np.sqrt(dt) * np.random.normal(0, 1, M)
+    # Initialize solution array
+    t = np.linspace(t0, t0 + T, N + 1)  # integration grid
+    X = np.zeros((M, N + 1))
+
+    # Initial condition
+    X[:, 0] = np.full(M, x0)
+
+    for n in range(N):
+        dW = np.random.randn(M)
+        X[:, n + 1] = (X[:, n] + a(t[n], X[:, n])*dT
+            + b(t[n], X[:, n])*np.sqrt(dT)*dW)
 
     return t, X
 
 
 def milstein(t0, x0, T, a, b, db_dx, M, N):
-    """ Numerical integration of an SDE using the stochastic Milstein scheme
+    """Numerical integration of an SDE using the stochastic Milstein scheme.
 
-    x(t0) = x0
-    dx(t) = a(t, x(t))*dt + b(t, x(t))*dW(t)   [Itô SDE]
+        x(t0) = x0
+        dx(t) = a(t, x(t))*dt + b(t, x(t))*dW(t)    [Itô SDE]
 
     Parameters
     ----------
@@ -99,15 +153,14 @@ def milstein(t0, x0, T, a, b, db_dx, M, N):
     Returns
     -------
     t: numpy.ndarray of shape (N+1,)
-        Regular grid of discretization times in [t0, t0+T]
-    X: numpy.ndarray of shape (M,N+1)
+        Regular grid of discretization times in [t0, t0+T].
+    X: numpy.ndarray of shape (M, N+1)
         Simulation consisting of M trajectories.
         Each trajectory is a row vector composed of the
         values of the process at t.
 
     Example
     -------
-
     >>> import matplotlib.pyplot as plt
     >>> import sde_solvers as sde
     >>> t0, S0, T, mu, sigma = 0, 100.0, 2.0, 0.3,  0.4
@@ -120,19 +173,22 @@ def milstein(t0, x0, T, a, b, db_dx, M, N):
     >>> _= plt.xlabel('t')
     >>> _=  plt.ylabel('S(t)')
     >>> _= plt.title('Geometric BM (Milstein scheme)')
-
     """
+    dT = T/N  # size of simulation step
 
-    t = np.arange(t0, t0 + T, T / (N + 1))
-    dt = T / (N + 1)
-    X = np.zeros(shape=(M, N + 1))
-    X[:, 0] = np.ones(M) * x0
-    for n in range(1, N + 1):
-        X[:, n] = X[:, n - 1] + a(t[n], X[:, n - 1]) * dt + \
-            b(t[n], X[:, n - 1]) * np.sqrt(dt) * \
-            np.random.normal(0, 1, M) + \
-            0.5 * b(t[n], X[:, n - 1]) * db_dx(t[n], X[:, n - 1]) * \
-            (np.random.normal(0, 1, M)**2 - 1) * dt
+    # Initialize solution array
+    t = np.linspace(t0, t0 + T, N + 1)  # integration grid
+    X = np.zeros((M, N + 1))
+
+    # Initial condition
+    X[:, 0] = np.full(M, x0)
+
+    for n in range(N):
+        dW = np.random.randn(M)
+        X[:, n + 1] = (X[:, n] + a(t[n], X[:, n])*dT
+            + b(t[n], X[:, n])*np.sqrt(dT)*dW
+            + 0.5*b(t[n], X[:, n])*db_dx(t[n], X[:, n])
+            * (dW**2 - 1)*dT)
 
     return t, X
 

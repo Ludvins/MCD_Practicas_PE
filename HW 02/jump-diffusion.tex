@@ -1,0 +1,96 @@
+%%% Local Variables:
+%%% LaTeX-command: "pdflatex --shell-escape"
+%%% End:
+
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=magenta}
+\setlength{\parindent}{0in}
+\usepackage[margin=0.8in]{geometry}
+\usepackage[english]{babel}
+\usepackage{mathtools}
+\usepackage{fancyhdr}
+\usepackage{sectsty}
+\usepackage{engord}
+\usepackage{parskip}
+\usepackage{minted}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage[compact]{titlesec}
+\usepackage[center]{caption}
+\usepackage{placeins}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{minted}
+\usepackage{subfigure}
+\usepackage{pdfpages}
+% \titlespacing*{\subsection}{0pt}{5.5ex}{3.3ex}
+% \titlespacing*{\section}{0pt}{5.5ex}{1ex}
+\author{Luis Antonio Ortega Andrés\\Antonio Coín Castro}
+\date{\today}
+\title{Continuous-time stochastic processes\\\medskip
+\large Homework 1}
+\hypersetup{
+ pdfauthor={Luis Antonio Ortega Andrés},
+ pdftitle={Ejercicios de clase},
+ pdfkeywords={},
+ pdfsubject={},
+ pdflang={Spanish}}
+
+% \usemintedstyle{bw}
+
+\begin{document}
+
+\textbf{Jump-adapted Euler scheme for jump-diffusion SDEs}
+
+We wish to simulate the following SDE with jumps:
+\[
+X(t_0)=x_0, \quad
+dX(t)=a(t,X(t))\,dt + b(t, X(t))\,dW(t)+c(t, X(t^-))\, dJ(t).
+\]
+Let $\{t^*_1 < t_2^* < \dots < t^*_{N_1}=T\}$ be a regular grid of $N_1$ points, and let $\{\tau_1 < \tau_2 < \dots < \tau_{N_2}\}$ be the set of jump times simulated in $[t_0,t_0+T]$, each with intensity $Y_j \sim f_{Y}(y)$. We consider the following jump-adapted (non-regular) grid,
+\[
+\{t_1,\dots, t_{N}\}= \{t^*_1,\dots t^*_{N_1}\} \cup \{\tau_1,\dots,\tau_{N_2}\},
+\]
+
+and we define $\Delta T_n = t_{n+1}-t_{n}$ for all $n$. For convenience, let $\xi_n$ denote the approximation of $X(t)$ at time $t_n$. For a single simulation, we proceed as follows:
+
+\begin{enumerate}
+  \item Set $\xi_0=x_0$.
+  \item For a generic approximation $\xi_{n+1}$, we perform the following calculations:
+  \begin{itemize}
+    \item Set $\xi_{n+1}^-=\xi_n + a(t_n, \xi_n)\Delta T_n+b(t_n, Y_n)\sqrt{\Delta T_n}Z_n$, where $Z_n \sim \mathcal N(0,1)$ iid.
+    \item Take the possible jump into account by setting the definitive approximation as  \[\xi_{n+1}=\xi_{n+1}^- + c(t_{n+1}, \xi_{n+1}^-)\Delta J_n,\]
+    where $\Delta J_n$ is defined as:
+    \[
+    \Delta J_n =\begin{cases}
+      Y_j& \text{if } $\exists j: t_{n+1}=\tau_j,$\\
+      0& \text{otherwise}.
+    \end{cases}
+    \]
+  \end{itemize}
+\end{enumerate}
+
+Note that in each step there can be at most one jump (since the jump times are included in the grid). Now there are two options for the return values:
+
+\begin{itemize}
+  \item \textbf{Option 1.} Return the complete set of approximations $\{\xi_0,\dots, \xi_{N}\}$ at non-regular time steps.
+  \item \textbf{Option 2.} Return only those approximations corresponding to the original regular grid of $N_1$ points.
+\end{itemize}
+
+Option 2 seems to be the most reasonable choice, since in Option 1 we would get different grid sizes for each simulation.
+\end{document}
