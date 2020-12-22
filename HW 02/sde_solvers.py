@@ -118,6 +118,7 @@ def euler_maruyana(t0, x0, T, a, b, M, N):
     # Initial condition
     X[:, 0] = np.full(M, x0)
 
+    # Integration of the SDE
     for n in range(N):
         dW = np.random.randn(M)
         X[:, n + 1] = (X[:, n] + a(t[n], X[:, n])*dT
@@ -184,6 +185,7 @@ def milstein(t0, x0, T, a, b, db_dx, M, N):
     # Initial condition
     X[:, 0] = np.full(M, x0)
 
+    # Integration of the SDE
     for n in range(N):
         dW = np.random.randn(M)
         X[:, n + 1] = (X[:, n] + a(t[n], X[:, n])*dT
@@ -314,6 +316,39 @@ def euler_jump_diffusion(t0, x0, T, a, b, c, simulator_jump_process, M, N):
     # Simulate jump process
     times_of_jumps, sizes_of_jumps = simulator_jump_process(t0, T, M)
 
+    def compute_jumps_effect(X_prev_m, tn, taus, Ys):
+        """Compute the aggregated effect for the mth simulation of all the jumps in [t_n, t_n+1].
+
+        Parameters
+        ----------
+        tn : float
+           Time at step n.
+        X_prev_m : float
+           Estimation at time tn for the mth simulation.
+        taus : list [float]
+            List of jump times for the mth simulation in [tn, tn+1].
+        Ys : list [float]
+            List of jump sizes for each jump in taus.
+
+        Returns
+        -------
+        t_prev_m : float
+            Time of last jump in [tn, tn+1]
+        X_prev_m : float
+            Estimation at time t_prev_m for the mth simulation.
+        """
+        t_prev_m = tn
+        for (tau, Y) in zip(taus, Ys):
+            dW = np.random.randn()
+            dT_jump = tau - t_prev_m
+            diffusion = (X_prev_m + a(t_prev_m, X_prev_m)*dT_jump
+                         + b(t_prev_m, X_prev_m)*np.sqrt(dT_jump)*dW)
+            t_prev_m = tau
+            X_prev_m = diffusion + c(tau, diffusion)*Y
+
+        return t_prev_m, X_prev_m
+
+    # Integration of the SDE with jumps
     for n in range(N):
         # Select only the jumps between t_n and t_n+1 for each simulation
         jumps_mask = np.array([(tau > t[n]) & (tau < t[n + 1])
@@ -321,39 +356,6 @@ def euler_jump_diffusion(t0, x0, T, a, b, c, simulator_jump_process, M, N):
 
         # Select only the simulations where there is at least one jump between t_n and t_n+1
         any_jump_mask = [jumps.any() for jumps in jumps_mask]
-
-        def compute_jumps_effect(X_prev_m, tn, taus, Ys):
-            """Compute the aggregated effect for the mth simulation
-               of all the jumps in [t_n, t_n+1].
-
-            Parameters
-            ----------
-            tn : float
-               Time at step n.
-            X_prev_m : float
-               Estimation at time tn for the mth simulation.
-            taus : list [float]
-                List of jump times for the mth simulation in [tn, tn+1].
-            Ys : list [float]
-                List of jump sizes for each jump in taus.
-
-            Returns
-            -------
-            t_prev_m : float
-                Time of last jump in [tn, tn+1]
-            X_prev_m : float
-                Estimation at time t_prev_m for the mth simulation.
-            """
-            t_prev_m = tn
-            for (tau, Y) in zip(taus, Ys):
-                dW = np.random.randn()
-                dT_jump = tau - t_prev_m
-                diffusion = (X_prev_m + a(t_prev_m, X_prev_m)*dT_jump
-                             + b(t_prev_m, X_prev_m)*np.sqrt(dT_jump)*dW)
-                t_prev_m = tau
-                X_prev_m = diffusion + c(tau, diffusion)*Y
-
-            return t_prev_m, X_prev_m
 
         # Compute possible jump effects
         t_prev = np.full(M, t[n])
