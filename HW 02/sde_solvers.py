@@ -266,35 +266,42 @@ def euler_jump_diffusion(t0, x0, T, a, b, c, simulator_jump_process, M, N):
         values of the process at t
     """
 
-
     times_of_jumps, sizes_of_jumps = simulator_jump_process(t0, T, M)
 
-    t = np.arange(t0, t0 + T, T / (N + 1))
-    dt = T / (N + 1)
-    X = np.zeros(shape=(M, N + 1))
-    X[:, 0] = np.ones(M) * x0
-    for n in range(1, N + 1):
+    dT = T / N  # size of simulation step
+
+    # Initialize solution array
+    t = np.linspace(t0, t0 + T, N + 1)  # integration grid
+    X = np.zeros((M, N + 1))
+
+    # Initial condition
+    X[:, 0] = np.full(M, x0)
+
+    for n in range(N):
 
         # print(times_of_jumps)
-        jump_mask = np.array([((tau > t[n-1]) & (tau < t[n])) for tau in times_of_jumps], dtype = object)
+        jump_mask = np.array([((tau > t[n]) & (tau < t[n + 1]))
+                              for tau in times_of_jumps],
+                             dtype=object)
         any_jump_mask = np.vectorize(lambda x: x.any())(jump_mask)
-        filtered_jump_mask = jump_mask[any_jump_mask]
 
-        sizes_of_jumps = np.array(sizes_of_jumps, dtype=object)
-        times_of_jumps = np.array(times_of_jumps, dtype = object)
+        X_prev, t_prev = X[:, n], np.full(M, t[n])
 
-        s = [sizes_of_jumps[any_jump_mask][i][filtered_jump_mask[i]] for i in range(len(filtered_jump_mask))]
-        s2 = [times_of_jumps[any_jump_mask][i][filtered_jump_mask[i]] for i in range(len(filtered_jump_mask))]
+        def update(X_prev, t_prev, m, taus, Ys):
+            for (tau, Y) in zip(taus, Ys):
+                dW = np.random.randn()
+                dT_jump = tau - t_prev[m]
+                diffusion = (X_prev[m] + a(t_prev[m], X_prev[m]) * dT_jump +
+                             b(t_prev[m], X_prev[m]) * np.sqrt(dT_jump) * dW)
+                t_prev[m]= tau
+                X_prev[m]= diffusion + c(tau, diffusion) * Y
 
-        print(s)
-        print(s2)
+        for m in np.where(any_jump_mask)[0]:
+            update(X_prev, t_prev, m, times_of_jumps[m][jump_mask[m]], sizes_of_jumps[m][jump_mask[m]])
 
-        # X[:, n][any_jump_mask] =
-
-
-        X[:, n] += X[:, n - 1] + a(t[n], X[:, n - 1]) * dt + \
-        b(t[n], X[:, n - 1]) * np.sqrt(dt) * np.random.normal(0, 1, M)
-
-
+        dW = np.random.randn(M)
+        dT_jump = t[n + 1] - t_prev
+        X[:, n + 1] = (X_prev + a(t_prev, X_prev) * dT_jump +
+                       b(t_prev, X_prev) * np.sqrt(dT_jump) * dW)
 
     return t, X
