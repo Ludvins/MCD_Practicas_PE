@@ -13431,39 +13431,35 @@ Antonio Coín Castro</em></p>
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>We wish to simulate the following SDE with jumps:</p>
-<p>[
-X(t_0)=x_0, \quad
+$$
+X(t_0)=x_0, \
 dX(t)=a(t,X(t))\,dt + b(t, X(t))\,dW(t)+c(t, X(t^-))\, dJ(t).
-]</p>
-<p>Let $\{t^*_1 &lt; t_2^* &lt; \dots &lt; t^*_{N_1}=T\}$ be a regular grid of $N_1$ points, and let $\{\tau_1 &lt; \tau_2 &lt; \dots &lt; \tau_{N_2}\}$ be the set of jump times simulated in $[t_0,t_0+T]$, each with intensity $Y_j \sim f_{Y}(y)$. We consider the following jump-adapted (non-regular) grid,</p>
-<p>[
-{t<em>1,\dots, t</em>{N}}= {t^<em>_1,\dots t^</em>_{N_1}} \cup {\tau<em>1,\dots,\tau</em>{N_2}},
-]</p>
-<p>and we define $\Delta T_n = t_{n+1}-t_{n}$ for all $n$. For convenience, let $\xi_n$ denote the approximation of $X(t)$ at time $t_n$. For a single simulation, we proceed as follows:</p>
-\begin{enumerate}
-  \item Set $\xi_0=x_0$.
-
-  \item For a generic approximation $\xi_{n+1}$, we perform the following calculations:
-
-  \begin{itemize}
-    \item Set $\xi_{n+1}^-=\xi_n + a(t_n, \xi_n)\Delta T_n+b(t_n, \xi_n)\sqrt{\Delta T_n}Z_n$, where $Z_n \sim \mathcal N(0,1)$ iid.
-
-\item Take the possible jump into account by setting the definitive approximation as  
-
-\[
-    \xi_{n+1}=\xi_{n+1}^- + c(t_{n+1}, \xi_{n+1}^-)\Delta J_n,
-\]
-
-where $\Delta J_n$ is defined as:
-
-\[
+$$<p>Let $\{t^*_1 &lt; t_2^* &lt; \dots &lt; t^*_{N_1}=T\}$ be a regular grid of $N_1$ points, and let $\{\tau_1 &lt; \tau_2 &lt; \dots &lt; \tau_{N_2}\}$ be the set of jump times simulated in $[t_0,t_0+T]$, each with intensity $Y_j \sim f_{Y}(y)$. We consider the following jump-adapted (non-regular) grid,</p>
+$$
+\{t_1,\dots, t_{N}\}= \{t^*_1,\dots t^*_{N_1}\} \cup \{\tau_1,\dots,\tau_{N_2}\},
+$$<p>and we define $\Delta T_n = t_{n+1}-t_{n}$ for all $n$. For convenience, let $\xi_n$ denote the approximation of $X(t)$ at time $t_n$. For a single simulation, we proceed as follows:</p>
+<ol>
+<li><p>Set $\xi_0=x_0$.</p>
+</li>
+<li><p>For a generic approximation $\xi_{n+1}$, we perform the following calculations:</p>
+<ul>
+<li><p>Set $\xi_{n+1}^-=\xi_n + a(t_n, \xi_n)\Delta T_n+b(t_n, \xi_n)\sqrt{\Delta T_n}Z_n$, where $Z_n \sim \mathcal N(0,1)$ iid.</p>
+</li>
+<li><p>Take the possible jump into account by setting the definitive approximation as<br>
+$$
+\xi_{n+1}=\xi_{n+1}^- + c(t_{n+1}, \xi_{n+1}^-)\Delta J_n,
+$$
+where $\Delta J_n$ is defined as:</p>
+</li>
+</ul>
+</li>
+</ol>
+$$
     \Delta J_n =\begin{cases}
       Y_j&amp; \text{if } \exists j: t_{n+1}=\tau_j,\\
       0&amp; \text{otherwise}.
     \end{cases}
-\]
-  \end{itemize}
-\end{enumerate}<p>Note that in each step there can be at most one jump (since the jump times are included in the grid). Finally, we return the values of the approximations only at the original regular grid, and we also return the matrices of jump times and sizes (for all simulations).</p>
+$$<p>Note that in each step there can be at most one jump (since the jump times are included in the grid). Finally, we return the values of the approximations only at the original regular grid, and we also return the matrices of jump times and sizes (for all simulations).</p>
 
 </div>
 </div>
