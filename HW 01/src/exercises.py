@@ -236,7 +236,7 @@ def plot_trajectories_and_distribution(t, B, t0, B0, T, mu, sigma,
     plt.show()
 
 
-def animate_arithmetic_BM(t0, B0, T, mu, sigma, M, N, figsize=None, max_trajectories=100):
+def animate_arithmetic_BM(t0, B0, T, mu, sigma, M, N, figsize=None, max_trajectories=100, fix_Y_dist=True):
     """Animate simulation in [t0,t0+T] of arithmetic Brownian motion trajectories.
 
     The process is given by the expression:
@@ -263,6 +263,9 @@ def animate_arithmetic_BM(t0, B0, T, mu, sigma, M, N, figsize=None, max_trajecto
         Width, height in inches. If not provided, defaults to [6.4, 4.8]
     max_trajectories : int
         Maximum number of trajectories to show in graph
+    fix_Y_dist : boolean
+        Whether to maintain the Y axis fixed when plotting the distribution
+        of values.
 
     Returns
     -------
@@ -286,13 +289,18 @@ def animate_arithmetic_BM(t0, B0, T, mu, sigma, M, N, figsize=None, max_trajecto
 
     # Simulate M Brownian trajectories
     t, B = simulate_arithmetic_BM(t0, B0, T, mu, sigma, M, N)
+    min_B, max_B = np.min(B), np.max(B)
+    xx = np.arange(min_B, max_B, 0.01)
+    frames = int(N / 10) + 1
+    step_size = 10
 
     def pdf(x, t):
         """Compute the theoretical pdf at time 't', evaluated in 'x'."""
-        if t == t0:
-            return np.full_like(x, B0)
         return norm.pdf(x, B0 + mu*(t - t0),
                         sigma*np.sqrt(t - t0))
+    
+    pdfs = [pdf(xx, t[step_size*i]) for i in range(1, frames)]
+    min_pdfs, max_pdfs = np.min(pdfs), np.max(pdfs)
 
     def init(t, B, step):
         """Initialize figure labels, titles and limits.
@@ -307,17 +315,20 @@ def animate_arithmetic_BM(t0, B0, T, mu, sigma, M, N, figsize=None, max_trajecto
         axes[0].set_xlabel('t')
         axes[0].set_ylabel('B(t)')
         axes[0].set_xlim(t[0], t[-1])
-        axes[0].set_ylim(np.min(B), np.max(B))
+        axes[0].set_ylim(min_B, max_B)
         axes[0].set_title(
             f'Arithmetic Brownian B({mu}, {sigma}) motion in 1D at t = {t[step]:.3f}')
         axes[1].set_title(
             f'Distribution of B({t[step]:.3f}) = x | B({t0}) = {B0}')
         axes[1].set_xlabel('x')
+        axes[1].set_xlim(min_B, max_B)
+        if fix_Y_dist:
+            axes[1].set_ylim(min_pdfs, max_pdfs)
 
     def update(i):
         """Update output in animation by advancing frames."""
         # Advance 10 timesteps for each call
-        step = 10*i
+        step = step_size*i
 
         # Set labels and limits
         init(t, B, step)
@@ -333,12 +344,12 @@ def animate_arithmetic_BM(t0, B0, T, mu, sigma, M, N, figsize=None, max_trajecto
                      label="Empirical distribution")
 
         # Plot theoretical distribution
-        left, right = axes[1].get_xlim()
-        x = np.arange(left, right, 0.01)
-        y = pdf(x, t[step])
-        axes[1].plot(x, y, color="red", lw=2, label="True pdf")
+        if i == 0:
+            axes[1].vlines(x=B0, ymin = 0, ymax = axes[1].get_ylim()[1], colors="red", lw = 2)
+        else:
+            axes[1].plot(xx, pdfs[i-1], color="red", lw=2, label="True pdf")
 
         # Show legend
         axes[1].legend()
 
-    return anim.FuncAnimation(fig, update, frames=int(N / 10) + 1, repeat=False)
+    return anim.FuncAnimation(fig, update, frames=frames, repeat=False)
